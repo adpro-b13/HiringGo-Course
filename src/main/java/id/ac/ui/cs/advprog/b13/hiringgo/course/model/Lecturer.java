@@ -12,10 +12,10 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Course {
+public class Lecturer {
     private Long id;
-    private String courseCode;
-    private String courseName;
-    private String description;
-    private Set<Lecturer> lecturers = new HashSet<>();
+    private String nip;
+    private String fullName;
+    private String email;
+    private Set<Course> courses = new HashSet<>();
 }

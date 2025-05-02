@@ -1,28 +1,16 @@
 package id.ac.ui.cs.advprog.b13.hiringgo.course.repository;
 
 import id.ac.ui.cs.advprog.b13.hiringgo.course.model.Course;
-import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
-@Repository
-public class CourseRepository {
-    private final Map<String, Course> courseMap = new HashMap<>();
-
-    public Course save(Course course) {
-        courseMap.put(course.getId(), course);
-        return course;
-    }
-
-    public List<Course> findAll() {
-        return new ArrayList<>(courseMap.values());
-    }
-
-    public Optional<Course> findById(String id) {
-        return Optional.ofNullable(courseMap.get(id));
-    }
-
-    public void delete(String id) {
-        courseMap.remove(id);
-    }
+public interface CourseRepository {
+    List<Course> findAll();
+    Optional<Course> findById(Long id);
+    Optional<Course> findByCourseCode(String courseCode);
+    List<Course> findByLecturerNip(String lecturerNip);
+    Course save(Course course);
+    void delete(Course course);
+    boolean existsByCourseCode(String courseCode);
 }
