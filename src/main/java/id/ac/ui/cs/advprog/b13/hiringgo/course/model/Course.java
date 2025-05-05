@@ -1,21 +1,13 @@
 package id.ac.ui.cs.advprog.b13.hiringgo.course.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
+@Entity
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class Course {
-    private Long id;
-    private String courseCode;
-    private String courseName;
-    private String description;
-    private Set<Lecturer> lecturers = new HashSet<>();
+
+    
 }
