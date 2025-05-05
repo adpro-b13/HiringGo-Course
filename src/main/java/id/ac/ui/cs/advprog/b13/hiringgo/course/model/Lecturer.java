@@ -1,21 +1,15 @@
 package id.ac.ui.cs.advprog.b13.hiringgo.course.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
-import java.util.Set;
-
+@Entity
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class Lecturer {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String nip;
-    private String fullName;
-    private String email;
-    private Set<Course> courses = new HashSet<>();
+
+    private String nama;
 }

@@ -9,5 +9,18 @@ import java.util.List;
 @Data
 public class Course {
 
-    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(unique = true)
+    private String kode;
+
+    private String nama;
+
+    private String deskripsi;
+
+    @ManyToMany
+    private List<Lecturer> dosenPengampu;
+
 }
