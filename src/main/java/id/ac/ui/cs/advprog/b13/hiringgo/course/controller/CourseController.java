@@ -11,4 +11,33 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin/matakuliah")
 public class CourseController {
+
+    @Autowired
+    private CourseService service;
+
+    @GetMapping
+    public List<Course> getAll() {
+        return service.getAll();
+    }
+
+    @PostMapping
+    public Course create(@RequestBody Course mk) {
+        return service.create(mk);
+    }
+
+    @PutMapping("/{id}")
+    public Course update(@PathVariable Long id, @RequestBody Course mk) {
+        return service.update(id, mk);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}")
+    public Course getById(@PathVariable Long id) {
+        return service.getById(id);
+    }
 }
