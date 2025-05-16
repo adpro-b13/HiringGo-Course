@@ -24,3 +24,7 @@ REST API dengan Spring Boot sangat scalable dan fleksibel, memungkinkan aplikasi
 
 Dengan menggunakan Spring Boot dan REST API, saya membangun aplikasi yang mudah dikembangkan, aman, dapat diuji, serta scalable dan fleksibel. Teknologi ini membantu dalam menciptakan solusi jaringan yang efisien dan dapat dengan mudah beradaptasi dengan kebutuhan aplikasi yang berkembang.
 
+## Code Diagram Course
+![Code Diagram Course ](image/CodeDiagramCourse-.drawio.png)
+## Component Diagram Course
+![Component Diagram Course ](image/ComponentDiagramCourse.drawio.png)
