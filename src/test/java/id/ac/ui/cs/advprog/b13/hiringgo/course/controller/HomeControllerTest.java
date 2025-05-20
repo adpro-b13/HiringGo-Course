@@ -16,9 +16,9 @@ public class HomeControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    public void testHelloWorld() throws Exception {
+    public void testHomeEndpointReturnsWelcomeMessage() throws Exception {
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("Hello, HiringGo!"));
+                .andExpect(content().string("Welcome to HiringGo-Course!"));
     }
 }
