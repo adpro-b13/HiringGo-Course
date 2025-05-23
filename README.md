@@ -28,3 +28,32 @@ Dengan menggunakan Spring Boot dan REST API, saya membangun aplikasi yang mudah 
 ![Code Diagram Course ](image/CodeDiagramCourse-.drawio.png)
 ## Component Diagram Course
 ![Component Diagram Course ](image/ComponentDiagramCourse.drawio.png)
+
+
+## Alasan Penggunaan Asynchronous Programming
+
+Pada proyek ini, saya mulai menerapkan **Asynchronous Programming** pada endpoint `GET /admin/matakuliah/async`, dengan memanfaatkan anotasi `@Async` dan `CompletableFuture` dari Spring Framework. Berikut adalah alasan mengapa pendekatan ini digunakan:
+
+### 1. Meningkatkan Responsivitas Aplikasi
+
+Asynchronous programming memungkinkan sistem untuk **menjalankan proses lain tanpa harus menunggu proses saat ini selesai**. Dalam konteks ini, saat client meminta data mata kuliah, thread utama tidak perlu “diam” menunggu hasil dari database—sehingga sistem tetap responsif terhadap permintaan lainnya.
+
+### 2. Efisiensi Resource Server
+
+Dengan menggunakan asynchronous method (`CompletableFuture`), saya bisa **menghindari blocking pada thread pool**, yang sangat penting ketika jumlah pengguna atau permintaan meningkat. Hal ini membuat aplikasi lebih hemat resource dan siap untuk skala yang lebih besar.
+
+### 3. Cocok untuk Sistem Real-Time dan Modern
+
+Asynchronous programming adalah **standar di sistem modern**, termasuk aplikasi real-time seperti sistem notifikasi, chat, atau live update. Meskipun belum digunakan untuk fitur tersebut saat ini, dengan memulai menggunakan pendekatan async, sistem jadi lebih siap untuk integrasi fitur-fitur tersebut di masa depan.
+
+### 4. Mendukung Pengujian dan Pengembangan Modular
+
+Dengan membungkus hasil dalam `CompletableFuture`, fungsi menjadi **lebih mudah diuji dan lebih modular**, serta bisa diproses lebih fleksibel dalam pipeline asynchronous lainnya.
+
+### 5. Implementasi Sederhana dengan Dampak Besar
+
+Spring Boot menyediakan dukungan native terhadap asynchronous programming melalui `@Async`, sehingga implementasinya relatif sederhana namun memberikan **manfaat besar terhadap performa dan skalabilitas sistem**.
+
+
+
+

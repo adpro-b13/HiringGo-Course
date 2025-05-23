@@ -5,6 +5,7 @@ import id.ac.ui.cs.advprog.b13.hiringgo.course.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.concurrent.CompletableFuture;
 
 import java.util.List;
 
@@ -39,5 +40,10 @@ public class CourseController {
     @GetMapping("/{id}")
     public Course getById(@PathVariable Long id) {
         return service.getById(id);
+    }
+
+    @GetMapping("/async")
+    public CompletableFuture<List<Course>> getAllAsync() {
+    return service.getAllAsync();
     }
 }

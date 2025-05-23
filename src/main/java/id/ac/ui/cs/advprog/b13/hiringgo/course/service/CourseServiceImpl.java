@@ -3,9 +3,11 @@ package id.ac.ui.cs.advprog.b13.hiringgo.course.service;
 import id.ac.ui.cs.advprog.b13.hiringgo.course.model.Course;
 import id.ac.ui.cs.advprog.b13.hiringgo.course.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class CourseServiceImpl implements CourseService {
@@ -50,4 +52,11 @@ public class CourseServiceImpl implements CourseService {
     void setRepository(CourseRepository repository) {
         this.repository = repository;
     }
+
+    @Override
+    @Async
+    public CompletableFuture<List<Course>> getAllAsync() {
+        return CompletableFuture.completedFuture(repository.findAll());
+    }
+
 }
