@@ -37,6 +37,8 @@ dependencies {
 //    implementation ("org.springframework.boot:spring-boot-starter-security")
     runtimeOnly("com.h2database:h2")
     testImplementation("com.h2database:h2")
+    implementation("org.springframework.boot:spring-boot-starter-actuator") //  Actuator
+    implementation("io.micrometer:micrometer-registry-prometheus") //  Prometheus
 
 }
 
@@ -44,3 +46,4 @@ tasks.withType<Test> {
     useJUnitPlatform()
     systemProperty("spring.profiles.active", "test")
 }
+

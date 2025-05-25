@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Data
@@ -11,7 +12,7 @@ public class Course {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private UUID id;
 
     @Column(unique = true)
     private String kode;
@@ -20,7 +21,8 @@ public class Course {
 
     private String deskripsi;
 
-    @ManyToMany
+
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Lecturer> dosenPengampu;
 
 }

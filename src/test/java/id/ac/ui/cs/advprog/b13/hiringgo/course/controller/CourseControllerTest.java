@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collections;
+import java.util.UUID;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -46,54 +47,54 @@ public class CourseControllerTest {
     @BeforeEach
     void setUp() {
         sampleCourse = new Course();
-        sampleCourse.setId(1L);
+        sampleCourse.setId(UUID.randomUUID());
         sampleCourse.setKode("CS123");
         sampleCourse.setNama("Pemrograman Lanjut");
         sampleCourse.setDeskripsi("Belajar lanjutan Java");
 
         when(courseService.getAll()).thenReturn(Collections.singletonList(sampleCourse));
-        when(courseService.getById(1L)).thenReturn(sampleCourse);
+        when(courseService.getById(any())).thenReturn(sampleCourse);
         when(courseService.create(any(Course.class))).thenReturn(sampleCourse);
-        when(courseService.update(eq(1L), any(Course.class))).thenReturn(sampleCourse);
+        when(courseService.update(any(), any(Course.class))).thenReturn(sampleCourse);
     }
 
     @Test
     void testGetAll() throws Exception {
-        mockMvc.perform(get("/admin/matakuliah"))
+        mockMvc.perform(get("/admin/matakuliah/list"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].kode").value("CS123"));
     }
 
     @Test
     void testGetById() throws Exception {
-        mockMvc.perform(get("/admin/matakuliah/1"))
+        mockMvc.perform(get("/admin/matakuliah/" + sampleCourse.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.nama").value("Pemrograman Lanjut"));
     }
 
     @Test
     void testCreate() throws Exception {
-        mockMvc.perform(post("/admin/matakuliah")
+        mockMvc.perform(post("/admin/matakuliah/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(sampleCourse)))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.kode").value("CS123"));
     }
 
     @Test
     void testUpdate() throws Exception {
-        mockMvc.perform(put("/admin/matakuliah/1")
+        mockMvc.perform(put("/admin/matakuliah/" + sampleCourse.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(sampleCourse)))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.deskripsi").value("Belajar lanjutan Java"));
     }
 
     @Test
     void testDelete() throws Exception {
-        mockMvc.perform(delete("/admin/matakuliah/1"))
+        mockMvc.perform(delete("/admin/matakuliah/" + sampleCourse.getId()))
                 .andExpect(status().isNoContent());
 
-        verify(courseService).delete(1L);
+        verify(courseService).delete(sampleCourse.getId());
     }
 }
