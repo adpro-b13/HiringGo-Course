@@ -24,7 +24,7 @@ public class CourseServiceImplTest {
         courseService = new CourseServiceImpl();
         courseService.setRepository(courseRepository);
         sampleCourse = new Course();
-        sampleCourse.setId(1L);
+        sampleCourse.setId(UUID.randomUUID());
         sampleCourse.setKode("CS123");
         sampleCourse.setNama("Pemrograman");
         sampleCourse.setDeskripsi("Deskripsi");
@@ -35,7 +35,7 @@ public class CourseServiceImplTest {
         when(courseRepository.findAll()).thenReturn(List.of(sampleCourse));
         List<Course> result = courseService.getAll();
         assertEquals(1, result.size());
-        assertEquals("CS123", result.get(0).getKode());
+        assertEquals("CS123", result.getFirst().getKode());
     }
 
     @Test
@@ -56,7 +56,7 @@ public class CourseServiceImplTest {
 
     @Test
     public void testUpdateCourse_Success() {
-        when(courseRepository.findById(1L)).thenReturn(Optional.of(sampleCourse));
+        when(courseRepository.findById(any())).thenReturn(Optional.of(sampleCourse));
         when(courseRepository.save(any(Course.class))).thenReturn(sampleCourse);
 
         Course input = new Course();
@@ -64,37 +64,40 @@ public class CourseServiceImplTest {
         input.setDeskripsi("Update Deskripsi");
         input.setDosenPengampu(Collections.emptyList());
 
-        Course result = courseService.update(1L, input);
+        Course result = courseService.update(sampleCourse.getId(), input);
         assertEquals("Rekayasa Perangkat Lunak", result.getNama());
     }
 
     @Test
     public void testUpdateCourse_NotFound() {
-        when(courseRepository.findById(1L)).thenReturn(Optional.empty());
+        when(courseRepository.findById(any())).thenReturn(Optional.empty());
         RuntimeException ex = assertThrows(RuntimeException.class, () ->
-                courseService.update(1L, sampleCourse));
+                courseService.update(sampleCourse.getId(), sampleCourse));
         assertEquals("Data tidak ditemukan", ex.getMessage());
     }
 
     @Test
     public void testDeleteCourse() {
-        doNothing().when(courseRepository).deleteById(1L);
-        courseService.delete(1L);
-        verify(courseRepository, times(1)).deleteById(1L);
+        when(courseRepository.findById(any())).thenReturn(Optional.of(sampleCourse));
+        Course course = courseService.getById(sampleCourse.getId());
+        if (course != null) {
+            courseService.delete(course.getId());
+        }
+        verify(courseRepository, times(1)).deleteById(sampleCourse.getId());
     }
 
     @Test
     public void testGetById_Success() {
-        when(courseRepository.findById(1L)).thenReturn(Optional.of(sampleCourse));
-        Course result = courseService.getById(1L);
+        when(courseRepository.findById(any())).thenReturn(Optional.of(sampleCourse));
+        Course result = courseService.getById(sampleCourse.getId());
         assertEquals("CS123", result.getKode());
     }
 
     @Test
     public void testGetById_NotFound() {
-        when(courseRepository.findById(1L)).thenReturn(Optional.empty());
+        when(courseRepository.findById(any())).thenReturn(Optional.empty());
         RuntimeException ex = assertThrows(RuntimeException.class, () ->
-                courseService.getById(1L));
+                courseService.getById(sampleCourse.getId()));
         assertEquals("Tidak ditemukan", ex.getMessage());
     }
 }

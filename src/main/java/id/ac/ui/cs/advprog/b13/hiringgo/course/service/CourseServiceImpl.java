@@ -7,6 +7,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -22,14 +23,14 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public Course create(Course mk) {
-        if (repository.findByKode(mk.getKode()).isPresent()) {
+        if (repository.findById(mk.getId()).isPresent()) {
             throw new RuntimeException("Kode mata kuliah sudah terdaftar!");
         }
         return repository.save(mk);
     }
 
     @Override
-    public Course update(Long id, Course mk) {
+    public Course update(UUID id, Course mk) {
         Course existing = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Data tidak ditemukan"));
         existing.setNama(mk.getNama());
@@ -39,12 +40,12 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(UUID id) {
         repository.deleteById(id);
     }
 
     @Override
-    public Course getById(Long id) {
+    public Course getById(UUID id) {
         return repository.findById(id).orElseThrow(() -> new RuntimeException("Tidak ditemukan"));
     }
 
