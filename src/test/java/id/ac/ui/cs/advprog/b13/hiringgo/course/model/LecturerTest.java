@@ -35,5 +35,34 @@ class LecturerTest {
         lecturer.setNama("Dr. Smith");
         assertTrue(lecturer.toString().contains("Dr. Smith"));
     }
-}
 
+    @Test
+    void testEqualsWithNullAndDifferentClass() {
+        Lecturer lecturer = new Lecturer();
+        assertNotEquals(lecturer, null);
+        assertNotEquals(lecturer, "not a lecturer");
+    }
+
+    @Test
+    void testEqualsWithDifferentId() {
+        Lecturer lecturer1 = new Lecturer();
+        Lecturer lecturer2 = new Lecturer();
+        lecturer1.setId(UUID.randomUUID());
+        lecturer2.setId(UUID.randomUUID());
+        assertNotEquals(lecturer1, lecturer2);
+    }
+
+    @Test
+    void testHashCodeWithNullFields() {
+        Lecturer lecturer1 = new Lecturer();
+        Lecturer lecturer2 = new Lecturer();
+        assertEquals(lecturer1.hashCode(), lecturer2.hashCode());
+    }
+
+    @Test
+    void testToStringWithNullFields() {
+        Lecturer lecturer = new Lecturer();
+        String str = lecturer.toString();
+        assertNotNull(str);
+    }
+}

@@ -49,5 +49,34 @@ class CourseTest {
         assertTrue(course.toString().contains("CS101"));
         assertTrue(course.toString().contains("Intro to CS"));
     }
-}
 
+    @Test
+    void testEqualsWithNullAndDifferentClass() {
+        Course course = new Course();
+        assertNotEquals(course, null);
+        assertNotEquals(course, "not a course");
+    }
+
+    @Test
+    void testEqualsWithDifferentId() {
+        Course course1 = new Course();
+        Course course2 = new Course();
+        course1.setId(UUID.randomUUID());
+        course2.setId(UUID.randomUUID());
+        assertNotEquals(course1, course2);
+    }
+
+    @Test
+    void testHashCodeWithNullFields() {
+        Course course1 = new Course();
+        Course course2 = new Course();
+        assertEquals(course1.hashCode(), course2.hashCode());
+    }
+
+    @Test
+    void testToStringWithNullFields() {
+        Course course = new Course();
+        String str = course.toString();
+        assertNotNull(str);
+    }
+}

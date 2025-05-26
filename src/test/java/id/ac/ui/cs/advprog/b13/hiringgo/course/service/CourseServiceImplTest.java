@@ -99,5 +99,42 @@ class CourseServiceImplTest {
         when(courseRepository.findById(courseId)).thenReturn(Optional.empty());
         assertThrows(RuntimeException.class, () -> courseService.getById(courseId));
     }
-}
 
+    @Test
+    void testCreateCourseWithEmptyLecturerList() {
+        Course emptyLecturerCourse = new Course();
+        emptyLecturerCourse.setDosenPengampu(new ArrayList<>());
+        when(courseRepository.save(any(Course.class))).thenReturn(emptyLecturerCourse);
+        Course result = courseService.create(emptyLecturerCourse);
+        assertEquals(emptyLecturerCourse, result);
+        verify(courseRepository, times(1)).save(emptyLecturerCourse);
+    }
+
+    @Test
+    void testUpdateCourseNotFound() {
+        when(courseRepository.findById(courseId)).thenReturn(Optional.empty());
+        assertThrows(RuntimeException.class, () -> courseService.update(courseId, course));
+    }
+
+    @Test
+    void testDeleteCourseWithNonExistentId() {
+        doNothing().when(courseRepository).deleteById(courseId);
+        // Should not throw
+        assertDoesNotThrow(() -> courseService.delete(courseId));
+        verify(courseRepository, times(1)).deleteById(courseId);
+    }
+
+    @Test
+    void testSetRepository() {
+        CourseRepository mockRepo = mock(CourseRepository.class);
+        courseService.setRepository(mockRepo);
+        assertNotNull(courseService);
+    }
+
+    @Test
+    void testGetAllAsync() throws Exception {
+        List<Course> courses = Collections.singletonList(course);
+        when(courseRepository.findAll()).thenReturn(courses);
+        assertEquals(courses, courseService.getAllAsync().get());
+    }
+}
