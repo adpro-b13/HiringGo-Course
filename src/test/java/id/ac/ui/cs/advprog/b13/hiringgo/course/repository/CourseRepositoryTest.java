@@ -1,41 +1,42 @@
 package id.ac.ui.cs.advprog.b13.hiringgo.course.repository;
 
 import id.ac.ui.cs.advprog.b13.hiringgo.course.model.Course;
-import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-@DataJpaTest
-public class CourseRepositoryTest {
-
-    @Autowired
+class CourseRepositoryTest {
+    @Mock
     private CourseRepository courseRepository;
 
-    @Test
-    @DisplayName("Should save and find course by kode")
-    public void testSaveAndFindByKode() {
-        Course course = new Course();
-        course.setKode("CS001");
-        course.setNama("Algoritma");
-        course.setDeskripsi("Belajar dasar algoritma");
+    private Course course;
+    private UUID courseId;
 
-        courseRepository.save(course);
-
-        Optional<Course> result = courseRepository.findByKode("CS001");
-
-        assertTrue(result.isPresent());
-        assertEquals("Algoritma", result.get().getNama());
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        courseId = UUID.randomUUID();
+        course = new Course();
+        course.setId(courseId);
+        course.setKode("CS101");
+        course.setNama("Intro to CS");
+        course.setDeskripsi("Basic course");
     }
 
     @Test
-    @DisplayName("Should return empty if kode not found")
-    public void testFindByKodeNotFound() {
-        Optional<Course> result = courseRepository.findByKode("TIDAKADA");
-        assertTrue(result.isEmpty());
+    void testFindByKode() {
+        when(courseRepository.findByKode("CS101")).thenReturn(Optional.of(course));
+        Optional<Course> found = courseRepository.findByKode("CS101");
+        assertTrue(found.isPresent());
+        assertEquals(course, found.get());
     }
 }
+

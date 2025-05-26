@@ -1,100 +1,80 @@
 package id.ac.ui.cs.advprog.b13.hiringgo.course.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import id.ac.ui.cs.advprog.b13.hiringgo.course.model.Course;
 import id.ac.ui.cs.advprog.b13.hiringgo.course.service.CourseService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Import;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.http.ResponseEntity;
 
-import java.util.Collections;
-import java.util.UUID;
+import java.util.*;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(CourseController.class)
-@Import(CourseControllerTest.CourseServiceTestConfig.class)
-public class CourseControllerTest {
-
-    @TestConfiguration
-    static class CourseServiceTestConfig {
-        @Bean
-        public CourseService courseService() {
-            return Mockito.mock(CourseService.class);
-        }
-    }
-
-    @Autowired
+class CourseControllerTest {
+    @Mock
     private CourseService courseService;
 
-    @Autowired
-    private MockMvc mockMvc;
+    @InjectMocks
+    private CourseController courseController;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    private Course sampleCourse;
+    private Course course;
+    private UUID courseId;
 
     @BeforeEach
     void setUp() {
-        sampleCourse = new Course();
-        sampleCourse.setId(UUID.randomUUID());
-        sampleCourse.setKode("CS123");
-        sampleCourse.setNama("Pemrograman Lanjut");
-        sampleCourse.setDeskripsi("Belajar lanjutan Java");
-
-        when(courseService.getAll()).thenReturn(Collections.singletonList(sampleCourse));
-        when(courseService.getById(any())).thenReturn(sampleCourse);
-        when(courseService.create(any(Course.class))).thenReturn(sampleCourse);
-        when(courseService.update(any(), any(Course.class))).thenReturn(sampleCourse);
+        MockitoAnnotations.openMocks(this);
+        courseId = UUID.randomUUID();
+        course = new Course();
+        course.setId(courseId);
+        course.setKode("CS101");
+        course.setNama("Intro to CS");
+        course.setDeskripsi("Basic course");
+        course.setDosenPengampu(new ArrayList<>());
     }
 
     @Test
-    void testGetAll() throws Exception {
-        mockMvc.perform(get("/admin/matakuliah/list"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].kode").value("CS123"));
+    void testGetAllCourses() {
+        List<Course> courses = Collections.singletonList(course);
+        when(courseService.getAll()).thenReturn(courses);
+        ResponseEntity<List<Course>> response = courseController.getAll();
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(1, response.getBody().size());
     }
 
     @Test
-    void testGetById() throws Exception {
-        mockMvc.perform(get("/admin/matakuliah/" + sampleCourse.getId()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.nama").value("Pemrograman Lanjut"));
+    void testCreateCourse() {
+        when(courseService.create(any(Course.class))).thenReturn(course);
+        ResponseEntity<Course> response = courseController.create(course);
+        assertEquals(201, response.getStatusCodeValue());
+        assertEquals(course, response.getBody());
     }
 
     @Test
-    void testCreate() throws Exception {
-        mockMvc.perform(post("/admin/matakuliah/add")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(sampleCourse)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.kode").value("CS123"));
+    void testUpdateCourse() {
+        when(courseService.update(eq(courseId), any(Course.class))).thenReturn(course);
+        ResponseEntity<Course> response = courseController.update(courseId, course);
+        assertEquals(201, response.getStatusCodeValue());
+        assertEquals(course, response.getBody());
     }
 
     @Test
-    void testUpdate() throws Exception {
-        mockMvc.perform(put("/admin/matakuliah/" + sampleCourse.getId())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(sampleCourse)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.deskripsi").value("Belajar lanjutan Java"));
+    void testDeleteCourse() {
+        doNothing().when(courseService).delete(courseId);
+        ResponseEntity<Void> response = courseController.delete(courseId);
+        assertEquals(204, response.getStatusCodeValue());
+        verify(courseService, times(1)).delete(courseId);
     }
 
     @Test
-    void testDelete() throws Exception {
-        mockMvc.perform(delete("/admin/matakuliah/" + sampleCourse.getId()))
-                .andExpect(status().isNoContent());
-
-        verify(courseService).delete(sampleCourse.getId());
+    void testGetCourseById() {
+        when(courseService.getById(courseId)).thenReturn(course);
+        ResponseEntity<Course> response = courseController.getById(courseId);
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(course, response.getBody());
     }
 }
+
