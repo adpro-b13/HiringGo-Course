@@ -53,3 +53,4 @@ public class CourseController {
         return service.getAllAsync().thenApplyAsync(list -> list);
     }
 }
+
