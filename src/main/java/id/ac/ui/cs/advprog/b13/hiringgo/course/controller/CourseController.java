@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-
 import java.util.List;
 
 @RestController
@@ -30,19 +29,19 @@ public class CourseController {
         return ResponseEntity.status(201).body(course);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id:[0-9a-fA-F\\-]{36}}")
     public ResponseEntity<Course> update(@PathVariable UUID id, @RequestBody Course mk) {
         Course updatedCourse = service.update(id, mk);
         return ResponseEntity.status(201).body(updatedCourse);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id:[0-9a-fA-F\\-]{36}}")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id:[0-9a-fA-F\\-]{36}}")
     public ResponseEntity<Course> getById(@PathVariable UUID id) {
         Course course = service.getById(id);
         return ResponseEntity.status(200).body(course);
@@ -53,4 +52,3 @@ public class CourseController {
         return service.getAllAsync().thenApplyAsync(list -> list);
     }
 }
-
